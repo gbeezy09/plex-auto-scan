@@ -1,8 +1,6 @@
-# plex-auto-scan
+# Plex Auto Scan
 
-# Introduction
-
-Plex Autoscan is a Microsoft .NET Core program that assists with importing of new media into Plex Media Server from Google Team Drives. Program provides two distinct functions: change detection and change scanning.
+Plex Autoscan is a Microsoft .NET Core program that assists with importing of new media into Plex Media Server from Google Team Drives. Among other things, the program provides two distinct functions: change detection and change scanning.
  
 ### Change Detection
 Plex Autoscan uses Google Drive API to monitor changes to Google Drive without scanning the entire drive. It uses markers to incrementally collect
@@ -14,13 +12,12 @@ Plex Autoscan change scaninig function allows for scanning of media locations co
 
 # Requirements
 1. Any OS supported by .NET Core 3.1 ([link](https://docs.microsoft.com/en-us/dotnet/core/install/dependencies?tabs=netcore31&pivots=os-windows))
-1. .NET Core 3.1 runtime ([link](https://dotnet.microsoft.com/download/dotnet-core/3.1))
-
+1. Optional .NET Core 3.1 runtime ([link](https://dotnet.microsoft.com/download/dotnet-core/3.1)). Runtimes are bundled in the program
 
 # Installation
-1. Copy program to a location of choice on your Plex server
-1. Edit `appsetings.json` and `credentials.json` configuration files (look for `REPLACE-ME` tags)
-1. Verify and update locations for Plex Autoscan SQLite database, Plex database and Plex Scanner
+1. Extract the program to a location of choice on your Plex server. This location should be writable
+1. Edit `appsetings.json` configuration file (look for `REPLACE-ME` tags). You can use `appsettings.sample.json` as a guide
+1. Verify locations for PlexAutoScan SQLite database and Plex database
 
 # Usage
 Usage: `dotnet PlexAutoScan.dll [command] [options]`
@@ -32,37 +29,51 @@ Options:
   --log-level     Logging level (Verbose, Debug, Information, Warning, Error, Fatal)
 
 Commands:
-  detect-changes  Retrieves changes from Google Drive that occured since last change detection
-  scan            Performs scans of previously stored Google Drive changes
+  detect-changes  Performs change detection of newly added media items to Google team Drive that are missing from the Plex database.
+  google-export   Exports metadata of all media files from Google Team Drive to a Plex Auto Scan database.
+  list-missing    Lists all media files that are present in the Plex database but are not present in the metadata database and vice versa.
+  scan            Performs scans of previously captured changes.
+  update-trash    Processes all items in the Plex database marked as deleted to ensure they are truly missing from the file system or metadata database and updates the deleted status accordingly.
 ```
 
 ### Detect Changes Usage
-```angular2
+```
 Usage: PlexAutoScan detect-changes [options]
 
 Options:
-  --include-path        Specific path pattern to include in change detection (can be used multiple times; accepts globs)
-  --include-paths-file  File where include patterns are specified one per line
-  --exclude-path        Specific path pattern to exclude in change detection (can be used multiple times; accepts globs)
-  --exclude-paths-file  File where exclude patterns are specified one per line
-  --case-sensitive      Whether to use case sensitive comparisons (true or false). Default is OS dependent (false on Windows and tue on Linux and macOS)
-  -?|-h|--help          Show help information
+  --log-level             Logging level. Options are: Verbose, Debug, Information, Warning, Error, Fatal.
+  --case-sensitive        Whether to use case sensitive comparisons (true or false).
+  --include-path          Specific path to include (can be used multiple times; accepts globs).
+  --include-paths-file    File where include patterns are specified one per line.
+  --exclude-path          Specific path to exclude (can be used multiple times; accepts globs).
+  --exclude-paths-file    File where exclude patterns are specified one per line.
+  --source                Type of source to use for getting changes. Options are: Database, Disk, GoogleDriveChangesApi.  
+  --skip-bookmark-update  Skip bookmark update once changes are retrieved.
+  --server                Specific server to earmark the changes to (can be used multiple times). Default is host name where the program is running.
+  --processor             Type of processor to use for processing changes. Options are: Database, Api.  
+  -?|-h|--help            Show help information
+
 ```
 
 ### Scan Usage
-```angular2
+```
 Usage: PlexAutoScan scan [options]
 
 Options:
-  --include-path        Specific path pattern to scan (can be used multiple times; accepts globs)
-  --include-paths-file  File where include patterns are specified one per line
-  --exclude-path        Specific path pattern to exclude (can be used multiple times; accepts globs)
-  --exclude-paths-file  File where exclude patterns are specified one per line
-  --case-sensitive      Whether to use case sensitive comparisons (true or false). Default is OS dependent
-  --max-scans           Maximum number of scans to perform (default is unlimited)
-  --max-retries         Only process scans where number or retries is less than the number specified (default is unlimited)
-  -?|-h|--help          Show help information
+  --log-level              Logging level. Options are: Verbose, Debug, Information, Warning, Error, Fatal.
+  --case-sensitive         Whether to use case sensitive comparisons (true or false).
+  --include-path           Specific path to include (can be used multiple times; accepts globs).
+  --include-paths-file     File where include patterns are specified one per line.
+  --exclude-path           Specific path to exclude (can be used multiple times; accepts globs).
+  --exclude-paths-file     File where exclude patterns are specified one per line.
+  --server                 Specific server to earmark the changes to (can be used multiple times).
+  --batch-size             Number of request to fetch for batch processing (default 50)
+  --max-time               Maximum amount of time to run before exiting in format 10h4m19s (default is unlimited)
+  --source                 Source from where to get scan requests (Database, Api)
+  --disable-media-upgrade  Disables media upgrade and forces Plex to rescan on media upgrade
+  -?|-h|--help             Show help information
+
 ```
 
 # Notes
-On first usage, program will require you to acknowledge and allow access to Google Drive API on your Google account. 
+On first usage, for each Google team Drive, the program will require you to acknowledge and allow access to Google Drive API on your Google account. 
