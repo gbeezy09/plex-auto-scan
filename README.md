@@ -17,13 +17,17 @@ Plex Autoscan change scaninig function allows for scanning of media locations co
 # Installation
 1. Extract the program to a location of choice on your Plex server. This location should be writable
 1. Edit `appsetings.json` configuration file (look for `REPLACE-ME` tags). You can use `appsettings.sample.json` as a guide
-1. Verify locations for PlexAutoScan SQLite database and Plex database
+1. Verify locations for PlexAutoScan SQLite database (if missing, new database will be created on startup) and Plex database. Ensure that \ are escaped or use / instead as a path separator
+ 
 
 # Usage
+Scripts are provided that will run change detection and scan them in. You will need to set the `--server` parameter to match the Plex server name in `appsettings.json`
 Usage: `dotnet PlexAutoScan.dll [command] [options]`
 
 ### General Usage
 ```
+Usage: `dotnet PlexAutoScan.dll [command] [options]`
+
 Options:
   -?|-h|--help    Show help information
   --log-level     Logging level (Verbose, Debug, Information, Warning, Error, Fatal)
@@ -72,8 +76,10 @@ Options:
   --source                 Source from where to get scan requests (Database, Api)
   --disable-media-upgrade  Disables media upgrade and forces Plex to rescan on media upgrade
   -?|-h|--help             Show help information
-
 ```
 
+# Scheduled Runs
+It is recommended to run the app first time manally from the command line so that token access is generated. One done, you can schedule the included script to run every hour for example using cron or Windows Task Scheduler. Program will find any new media and scan it to Plex. 
+
 # Notes
-On first usage, for each Google team Drive, the program will require you to acknowledge and allow access to Google Drive API on your Google account. 
+On first run, for each Google Team Drive, the program will require you to acknowledge and allow access to Google Drive API on your account.
