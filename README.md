@@ -17,7 +17,7 @@ Plex Auto Scan change scanning function allows for scanning of media locations c
 # Installation
 1. Extract the program to a location of choice on your Plex server. This location should be writable
 1. Edit `appsetings.json` configuration file (look for `REPLACE-ME` tags). You can use `appsettings.sample.json` as a guide
-1. Edit the `plex-auto-scan` script to update the `--server` argument to match the name of your Plex server as specified in `appsettings.json`
+1. Edit the `plex-auto-scan.bat` or `plex-auto-scan.sh` based on your OS to update the `--server` argument to match the name of your Plex server as specified in `appsettings.json`
 1. Verify locations for PlexAutoScan SQLite database (if missing, new database will be created on startup) and Plex database. Use `/` as a path separator to avoid escaping backslashes.
 
 
