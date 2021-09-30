@@ -1,4 +1,7 @@
 # Plex Auto Scan Change Log
+### 2.2.10
+- Logging changes to expose more details in Debug mode.
+
 ### 2.2.9
 - Fixed an issue with the media upgrade when multiple files exist for the same season and episode.
 
